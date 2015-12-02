@@ -7,6 +7,7 @@ import cucumber.runtime.java.StepDefAnnotation;
 import org.jvnet.hudson.annotation_indexer.AnnotationProcessorImpl;
 import org.kohsuke.MetaInfServices;
 
+import javax.annotation.processing.FilerException;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -62,6 +63,9 @@ public class CukeAnnotationIndexer extends AnnotationProcessorImpl {
                 }
             } catch (FileNotFoundException x) {
                 // this file is created for the first time
+            } catch (FilerException x) {
+                processingEnv.getMessager().printMessage(Kind.WARNING, x.toString());
+                return;
             }
 
             FileObject out = processingEnv.getFiler().createResource(CLASS_OUTPUT,
